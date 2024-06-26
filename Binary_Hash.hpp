@@ -5,23 +5,23 @@
 
 class Binary_Hash
 {
-	private:
-		static inline unsigned max_section = 0;
-		
-		unsigned short section;
-		std::vector<unsigned char> group;
+private:
+	static inline unsigned max_section = 0;
+	
+	unsigned short section;
+	std::vector<unsigned char> group;
 
-	public:
-		Binary_Hash();
-		Binary_Hash(const Binary_Hash& binhash);
-		Binary_Hash(void* value);
+public:
+	Binary_Hash();
+	Binary_Hash(const Binary_Hash& binhash);
+	Binary_Hash(void* value);
 
-		void insert(void* value);
-		void erase(void* value);
-		void reserve(std::size_t size);
-		bool contains(void* value);
-		void clear();
-		std::size_t size();
+	void insert(void* value);
+	void erase(void* value);
+	void reserve(std::size_t size);
+	bool contains(void* value);
+	void clear();
+	std::size_t size();
 };
 
 
