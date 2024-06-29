@@ -6,8 +6,6 @@
 class Binary_Hash
 {
 private:
-	static inline unsigned max_section = 0;
-	
 	unsigned short section;
 	std::vector<unsigned char> group;
 
@@ -39,11 +37,6 @@ Binary_Hash::Binary_Hash(const Binary_Hash& binhash)
 
 Binary_Hash::Binary_Hash(void* value)
 {
-	if (this->max_section < *(unsigned*)value / 8)
-	{
-		this->max_section = *(unsigned*)value / 8;
-	}
-	
 	this->section = *(unsigned*)value / 8;
 	this->group = std::vector<unsigned char>(1, 0);
 	this->group[0] |= (1 << *(unsigned*)value % 8);
@@ -51,11 +44,6 @@ Binary_Hash::Binary_Hash(void* value)
 
 void Binary_Hash::insert(void* value)
 {
-	if (this->max_section < *(unsigned*)value / 8)
-	{
-		this->max_section = *(unsigned*)value / 8;
-	}
-	
 	if (this->section == 0 || this->section == *(unsigned*)value)
 	{
 		if (this->group.size() < *(unsigned*)value / 8 + 1)
@@ -103,18 +91,17 @@ bool Binary_Hash::contains(void* value)
 	{
 		if (this->section == 0)
 		{
-			return ((this->group[*(unsigned*)value / 8] >> (*(unsigned*)value % 8)) % 2 == 1) ? true : false;
+			return ((this->group[*(unsigned*)value / 8] >> (*(unsigned*)value % 8)) & 1 == 1) ? true : false;
 		}
 		else
 		{
-			return ((this->group[0] >> (*(unsigned*)value % 8)) % 2 == 1) ? true : false;
+			return ((this->group[0] >> (*(unsigned*)value % 8)) & 1 == 1) ? true : false;
 		}
 	}
 }
 
 void Binary_Hash::clear()
 {
-	this->max_section = 0;
 	this->section = 0;
 	this->group.clear();
 }
@@ -124,8 +111,15 @@ std::size_t Binary_Hash::size()
 	std::size_t count = 0;
 	for (std::size_t n = 0, k = 1; n < this->group.size(); ++k)
 	{
-		n += ((k %= 8) == 0) ? 1 : 0;
-		count += ((this->group[n] >> k) % 2 == 1) ? 1 : 0; 
+		if (this->group[n] != 0)
+		{
+			n += ((k %= 8) == 0) ? 1 : 0;
+			count += ((this->group[n] >> k) & 1 == 1) ? 1 : 0;
+		}
+		else
+		{
+			++n;
+		}
 	}
 	return count;
 }
