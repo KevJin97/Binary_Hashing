@@ -3,3 +3,5 @@ A minimal hashing function for indexed items. 'unsigned short section' is used i
 When inputting any integer type of data, the 'void * value' pointer reads all inputs as unsigned binary strings. Each 'std::vector<unsigned char>' index can group 8 values.
 
 Any given value is indexed as 'group[value / 8]' and grouped by flipping the bit corresponding to 'value % 8'
+
+After testing the 4 byte addressing scheme against the 1 byte addressing scheme, the average result shows that the 1 byte is marginally faster.
