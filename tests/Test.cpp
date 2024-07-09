@@ -1,5 +1,4 @@
 #include "../Binary_Hash.hpp"
-#include "../Binary_Hash_Larger.hpp"
 #include <iostream>
 #include <unordered_set>
 #include <set>
@@ -8,7 +7,6 @@
 using namespace std;
 
 void Binary_Hash_speed(unsigned);
-void Binary_Hash_Larger_speed(unsigned);
 void unordered_set_speed(unsigned);
 void set_speed(unsigned);
 
@@ -85,7 +83,6 @@ int main(int argc, const char* argv[])
 	//size >>= 8;
 
 	Binary_Hash_speed(size);
-	Binary_Hash_Larger_speed(size);
 	unordered_set_speed(size);
 	set_speed(size);
 	return 0;
@@ -102,18 +99,6 @@ void Binary_Hash_speed(unsigned size)
 	}
 	auto stop = chrono::high_resolution_clock::now();
 	cout << "Binary Hash Execution Time:\t" << chrono::duration_cast<chrono::microseconds>(stop - start).count() << "\tmicroseconds" << endl;
-}
-
-void Binary_Hash_Larger_speed(unsigned size)
-{
-	Binary_Hash_Larger hash;
-	auto start = chrono::high_resolution_clock::now();
-	for (unsigned n = 0; n < size; ++n)
-	{
-		hash.insert(&n);
-	}
-	auto stop = chrono::high_resolution_clock::now();
-	cout << "Binary Hash (L) Execution Time:\t" << chrono::duration_cast<chrono::microseconds>(stop - start).count() << "\tmicroseconds" << endl;
 }
 
 void unordered_set_speed(unsigned size)
