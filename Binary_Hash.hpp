@@ -23,26 +23,26 @@ public:
 };
 
 
-Binary_Hash::Binary_Hash()
+inline Binary_Hash::Binary_Hash()
 {
 	this->section = 0;
 	this->group = std::vector<unsigned char>(1, 0);
 }
 
-Binary_Hash::Binary_Hash(const Binary_Hash& binhash)
+inline Binary_Hash::Binary_Hash(const Binary_Hash& binhash)
 {
 	this->section = binhash.section;
 	this->group = binhash.group;
 }
 
-Binary_Hash::Binary_Hash(void* value)
+inline Binary_Hash::Binary_Hash(void* value)
 {
 	this->section = *(unsigned*)value / 8;
 	this->group = std::vector<unsigned char>(1, 0);
 	this->group[0] |= (1 << *(unsigned*)value % 8);
 }
 
-void Binary_Hash::insert(void* value)
+inline void Binary_Hash::insert(void* value)
 {
 	if (this->section == 0 || this->section == *(unsigned*)value)
 	{
@@ -62,7 +62,7 @@ void Binary_Hash::insert(void* value)
 	}
 }
 
-void Binary_Hash::erase(void* value)
+inline void Binary_Hash::erase(void* value)
 {
 	if (*(unsigned*)value / 8 + 1 <= this->group.size())
 	{
@@ -70,7 +70,7 @@ void Binary_Hash::erase(void* value)
 	}
 }
 
-void Binary_Hash::reserve(std::size_t size)
+inline void Binary_Hash::reserve(std::size_t size)
 {
 	this->group.reserve(size / 8 + 1);
 	if (this->section != 0)
@@ -81,32 +81,35 @@ void Binary_Hash::reserve(std::size_t size)
 	}
 }
 
-bool Binary_Hash::contains(void* value)
+inline bool Binary_Hash::contains(void* value)
 {
-	if (*(unsigned*)value / 8 + 1 > this->group.size() && *(unsigned*)value / 8 + 1 > this->section)
+	if (((*(unsigned*)value / 8 + 1) > this->group.size()) && ((*(unsigned*)value / 8 + 1) > this->section))
 	{
+		//make sure that the number is in bounds of list before checking in the vectors
 		return false;
 	}
 	else
 	{
 		if (this->section == 0)
 		{
-			return ((this->group[*(unsigned*)value / 8] >> (*(unsigned*)value % 8)) & 1 == 1) ? true : false;
+			//if section starts at 0, then there is no offset. Scroll through indices at mod 8
+			return ((((this->group[*(unsigned*)value / 8] >> (*(unsigned*)value % 8))) & 1) == 1) ? true : false;
 		}
 		else
 		{
-			return ((this->group[0] >> (*(unsigned*)value % 8)) & 1 == 1) ? true : false;
+			//if section doesn't start at 0, then the number will be in this region
+			return ((((this->group[0] >> ((*(unsigned*)value % 8))) & 1) == 1)) ? true : false;
 		}
 	}
 }
 
-void Binary_Hash::clear()
+inline void Binary_Hash::clear()
 {
 	this->section = 0;
 	this->group.clear();
 }
 
-std::size_t Binary_Hash::size()
+inline std::size_t Binary_Hash::size()
 {
 	std::size_t count = 0;
 	for (std::size_t n = 0, k = 1; n < this->group.size(); ++k)
@@ -114,7 +117,7 @@ std::size_t Binary_Hash::size()
 		if (this->group[n] != 0)
 		{
 			n += ((k %= 8) == 0) ? 1 : 0;
-			count += ((this->group[n] >> k) & 1 == 1) ? 1 : 0;
+			count += (((this->group[n] >> k) & 1) == 1) ? 1 : 0;
 		}
 		else
 		{

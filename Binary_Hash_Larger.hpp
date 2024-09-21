@@ -27,19 +27,19 @@ public:
 };
 
 
-Binary_Hash_Larger::Binary_Hash_Larger()
+inline Binary_Hash_Larger::Binary_Hash_Larger()
 {
 	this->section = 0;
 	this->group = std::vector<unsigned>(1, 0);
 }
 
-Binary_Hash_Larger::Binary_Hash_Larger(const Binary_Hash_Larger& binhash)
+inline Binary_Hash_Larger::Binary_Hash_Larger(const Binary_Hash_Larger& binhash)
 {
 	this->section = binhash.section;
 	this->group = binhash.group;
 }
 
-Binary_Hash_Larger::Binary_Hash_Larger(void* value)
+inline Binary_Hash_Larger::Binary_Hash_Larger(void* value)
 {
 	if (this->max_section < *(unsigned*)value / BITNUM)
 	{
@@ -51,7 +51,7 @@ Binary_Hash_Larger::Binary_Hash_Larger(void* value)
 	this->group[0] |= (1 << *(unsigned*)value % BITNUM);
 }
 
-void Binary_Hash_Larger::insert(void* value)
+inline void Binary_Hash_Larger::insert(void* value)
 {
 	if (this->max_section < *(unsigned*)value / BITNUM)
 	{
@@ -76,7 +76,7 @@ void Binary_Hash_Larger::insert(void* value)
 	}
 }
 
-void Binary_Hash_Larger::erase(void* value)
+inline void Binary_Hash_Larger::erase(void* value)
 {
 	if (*(unsigned*)value / BITNUM + 1 <= this->group.size())
 	{
@@ -84,7 +84,7 @@ void Binary_Hash_Larger::erase(void* value)
 	}
 }
 
-void Binary_Hash_Larger::reserve(std::size_t size)
+inline void Binary_Hash_Larger::reserve(std::size_t size)
 {
 	this->group.reserve(size / BITNUM + 1);
 	if (this->section != 0)
@@ -95,9 +95,9 @@ void Binary_Hash_Larger::reserve(std::size_t size)
 	}
 }
 
-bool Binary_Hash_Larger::contains(void* value)
+inline bool Binary_Hash_Larger::contains(void* value)
 {
-	if (*(unsigned*)value / BITNUM + 1 > this->group.size() && *(unsigned*)value / BITNUM + 1 > this->section)
+	if ((*(unsigned*)value / BITNUM + 1 > this->group.size()) && (*(unsigned*)value / BITNUM + 1 > this->section))
 	{
 		return false;
 	}
@@ -105,23 +105,23 @@ bool Binary_Hash_Larger::contains(void* value)
 	{
 		if (this->section == 0)
 		{
-			return ((this->group[*(unsigned*)value / BITNUM] >> (*(unsigned*)value % BITNUM)) & 1 == 1) ? true : false;
+			return (((this->group[*(unsigned*)value / BITNUM] >> (*(unsigned*)value % BITNUM)) & 1) == 1) ? true : false;
 		}
 		else
 		{
-			return ((this->group[0] >> (*(unsigned*)value % BITNUM)) & 1 == 1) ? true : false;
+			return (((this->group[0] >> (*(unsigned*)value % BITNUM)) & 1) == 1) ? true : false;
 		}
 	}
 }
 
-void Binary_Hash_Larger::clear()
+inline void Binary_Hash_Larger::clear()
 {
 	this->max_section = 0;
 	this->section = 0;
 	this->group.clear();
 }
 
-std::size_t Binary_Hash_Larger::size()
+inline std::size_t Binary_Hash_Larger::size()
 {
 	std::size_t count = 0;
 	for (std::size_t n = 0, k = 1; n < this->group.size(); ++k)
@@ -129,7 +129,7 @@ std::size_t Binary_Hash_Larger::size()
 		if (this->group[n] != 0)
 		{
 			n += ((k %= BITNUM) == 0) ? 1 : 0;
-			count += ((this->group[n] >> k) & 1 == 1) ? 1 : 0;
+			count += (((this->group[n] >> k) & 1) == 1) ? 1 : 0;
 		}
 		else
 		{

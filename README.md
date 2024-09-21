@@ -4,4 +4,7 @@ When inputting any integer type of data, the 'void * value' pointer reads all in
 
 Any given value is indexed as 'group[value / 8]' and grouped by flipping the bit corresponding to 'value % 8'
 
-After testing the 4 byte addressing scheme against the 1 byte addressing scheme, the average result shows that the 1 byte is marginally faster.
+After testing the Larger ranged variation of the class, it was shown to exceed the 8-bit version by a non-marginal amount.
+TODO: Ensure that the 'contains' function is operating as expected
+TODO: Implement various default sizes of the hash function
+
